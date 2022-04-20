@@ -30,7 +30,6 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.util.DaemonThreadFactory;
 import io.flinkspector.core.runtime.OutputHandler.ResultState;
 import io.flinkspector.core.trigger.VerifyFinishedTrigger;
-import org.apache.flink.runtime.client.JobTimeoutException;
 import org.apache.flink.runtime.minicluster.MiniCluster;
 import org.apache.flink.runtime.testutils.MiniClusterResource;
 import org.apache.flink.streaming.util.TestStreamEnvironment;
@@ -113,7 +112,7 @@ public abstract class Runner {
 		};
 	}
 
-	protected abstract void executeEnvironment() throws JobTimeoutException, Throwable;
+	protected abstract void executeEnvironment() throws Throwable;
 
 	private synchronized void runLocalCluster() throws Throwable {
 		try {
@@ -123,8 +122,7 @@ public abstract class Runner {
 			finished.set(true);
 			cleanUp();
 		}
-		catch(JobTimeoutException
-				| IllegalStateException e) {
+		catch(IllegalStateException e) {
 			//cluster has been shutdown forcefully, most likely by a timeout.
 			cleanUp();
 			failed.set(true);

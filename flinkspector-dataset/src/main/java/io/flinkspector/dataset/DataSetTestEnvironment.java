@@ -22,6 +22,7 @@ import io.flinkspector.core.runtime.Runner;
 import io.flinkspector.core.trigger.DefaultTestTrigger;
 import io.flinkspector.core.trigger.VerifyFinishedTrigger;
 import org.apache.flink.api.java.DataSet;
+import org.apache.flink.configuration.ConfigOption;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.configuration.TaskManagerOptions;
@@ -30,6 +31,7 @@ import org.apache.flink.runtime.minicluster.MiniClusterConfiguration;
 import org.apache.flink.runtime.minicluster.RpcServiceSharing;
 import org.apache.flink.streaming.util.TestStreamEnvironment;
 import org.apache.flink.test.util.TestEnvironment;
+import static org.apache.flink.configuration.ConfigOptions.key;
 
 public class DataSetTestEnvironment extends TestEnvironment {
 
@@ -64,7 +66,8 @@ public class DataSetTestEnvironment extends TestEnvironment {
         int taskSlots = Runtime.getRuntime().availableProcessors();
 
         Configuration configuration = new Configuration();
-        configuration.setString(TaskManagerOptions.MANAGED_MEMORY_SIZE, "0");
+        ConfigOption configOption = TaskManagerOptions.MANAGED_MEMORY_SIZE;
+        configuration.set(configOption, "0");
 
         if (!configuration.contains(RestOptions.BIND_PORT)) {
             configuration.setString(RestOptions.BIND_PORT, "0");
